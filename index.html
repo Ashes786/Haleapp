@@ -20,44 +20,89 @@
             font-family: 'Playfair Display', serif;
         }
 
-        /* Phone Mockup Styles */
+        /* Realistic Phone Mockup Styles */
         .phone-mockup {
-            background: #1a1a1a;
-            border-radius: 40px;
-            padding: 10px;
-            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.25), 0 30px 60px -30px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: 50px;
+            padding: 12px;
+            box-shadow: 
+                0 50px 100px -20px rgba(0, 0, 0, 0.5), 
+                0 30px 60px -30px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.1);
             position: relative;
             width: 280px;
-            height: 560px;
-            overflow: hidden;
+            height: 580px;
+            overflow: visible;
         }
 
+        /* Power Button */
         .phone-mockup::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 25px;
-            background: #1a1a1a;
-            border-bottom-left-radius: 18px;
-            border-bottom-right-radius: 18px;
+            right: -3px;
+            top: 110px;
+            width: 3px;
+            height: 50px;
+            background: linear-gradient(180deg, #333 0%, #222 100%);
+            border-radius: 0 2px 2px 0;
+            z-index: 10;
+        }
+
+        /* Volume Buttons */
+        .phone-mockup::after {
+            content: '';
+            position: absolute;
+            left: -3px;
+            top: 90px;
+            width: 3px;
+            height: 70px;
+            background: linear-gradient(180deg, #333 0%, #222 100%);
+            border-radius: 2px 0 0 2px;
             z-index: 10;
         }
 
         .phone-screen {
             width: 100%;
             height: 100%;
-            border-radius: 32px;
-            overflow-y: auto;
+            border-radius: 40px;
+            overflow: hidden;
             background: white;
             position: relative;
             font-size: 11px;
         }
 
-        .phone-screen::-webkit-scrollbar {
-            width: 0px;
+        /* Dynamic Island */
+        .phone-screen::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 25px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 50;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* Animation Scenes */
+        .scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scene.active {
+            opacity: 1;
+            z-index: 5;
         }
 
         /* Animations */
@@ -87,9 +132,34 @@
             animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
         }
 
-        html {
-            scroll-behavior: smooth;
+        /* Voice Wave Animation */
+        .voice-wave-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 30px;
         }
+        
+        .voice-bar {
+            width: 4px;
+            background: #0d9488;
+            border-radius: 2px;
+            animation: voice-wave 1s ease-in-out infinite;
+        }
+        
+        .voice-bar:nth-child(1) { height: 10px; animation-delay: 0s; }
+        .voice-bar:nth-child(2) { height: 20px; animation-delay: 0.1s; }
+        .voice-bar:nth-child(3) { height: 15px; animation-delay: 0.2s; }
+        .voice-bar:nth-child(4) { height: 25px; animation-delay: 0.3s; }
+        .voice-bar:nth-child(5) { height: 10px; animation-delay: 0.4s; }
+
+        @keyframes voice-wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.5); }
+        }
+
+        html { scroll-behavior: smooth; }
     </style>
 
     <script>
@@ -109,32 +179,24 @@
 </head>
 <body class="antialiased">
 
-    <!-- Development Banner -->
+    <!-- Navigation & Banner (Condensed for brevity, same as before) -->
     <div class="bg-slate-900 text-white text-center py-2 px-4 text-sm z-[100] relative">
         🚀 <strong>MVP In Development:</strong> We are currently seeking early partners to bring Hale to life.
     </div>
-
-    <!-- Navigation -->
     <nav class="sticky top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-slate-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="#mission" class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden bg-slate-100">
-                        <img src="img/logo.png" alt="Hale Logo" class="w-full h-full object-cover">
-                    </div>
-                    <span class="text-xl font-bold text-slate-800 hidden sm:block">Hale</span>
-                </a>
-                
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="#mission" class="text-slate-600 hover:text-primary transition">Our Mission</a>
-                    <a href="#app-preview" class="text-slate-600 hover:text-primary transition">App Preview</a>
-                    <a href="#founder" class="text-slate-600 hover:text-primary transition">Founder</a>
-                    <a href="#partnerships" class="text-slate-600 hover:text-primary transition">Partner With Us</a>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+            <a href="#mission" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden bg-slate-100">
+                    <img src="img/logo.png" alt="Hale Logo" class="w-full h-full object-cover">
                 </div>
-                <a href="#support-mission" class="bg-primary text-white px-5 py-2 rounded-full font-medium hover:bg-primary-dark transition shadow-sm">
-                    Get Involved
-                </a>
+                <span class="text-xl font-bold text-slate-800 hidden sm:block">Hale</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#mission" class="text-slate-600 hover:text-primary transition">Our Mission</a>
+                <a href="#founder" class="text-slate-600 hover:text-primary transition">Founder</a>
+                <a href="#partnerships" class="text-slate-600 hover:text-primary transition">Partner With Us</a>
             </div>
+            <a href="#support-mission" class="bg-primary text-white px-5 py-2 rounded-full font-medium hover:bg-primary-dark transition shadow-sm">Get Involved</a>
         </div>
     </nav>
 
@@ -142,107 +204,236 @@
     <header id="mission" class="pt-16 pb-20 lg:pt-24 lg:pb-16 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
             <div class="fade-in-up">
-                <span class="inline-block px-4 py-1.5 bg-teal-50 text-primary font-semibold rounded-full text-sm mb-6">
-                    Accessibility First
-                </span>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6">
-                    Healthcare, <span class="font-serif italic text-primary">Accessible</span> To All.
-                </h1>
-                <p class="text-lg text-slate-600 mb-8 max-w-xl">
-                    Hale is a voice-first AI assistant designed for elders, the neurodivergent, and those left behind by complex tech. We are building a future where booking healthcare is as simple as speaking.
-                </p>
+                <span class="inline-block px-4 py-1.5 bg-teal-50 text-primary font-semibold rounded-full text-sm mb-6">Accessibility First</span>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6">Healthcare, <span class="font-serif italic text-primary">Accessible</span> To All.</h1>
+                <p class="text-lg text-slate-600 mb-8 max-w-xl">Hale is a voice-first AI assistant designed for elders, the neurodivergent, and those left behind by complex tech. We are building a future where booking healthcare is as simple as speaking.</p>
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="https://tally.so/r/D4dQol" target="_blank" class="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold rounded-full hover:bg-primary-dark transition shadow-lg shadow-teal-200">
-                        Become a Partner
-                    </a>
-                    <a href="https://tally.so/r/Y5W896" target="_blank" class="inline-flex items-center justify-center px-8 py-4 bg-white text-slate-700 font-semibold rounded-full border border-slate-200 hover:border-primary hover:text-primary transition">
-                        Learn More
-                    </a>
+                    <a href="https://tally.so/r/D4dQol" target="_blank" class="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold rounded-full hover:bg-primary-dark transition shadow-lg shadow-teal-200">Become a Partner</a>
+                    <a href="https://tally.so/r/Y5W896" target="_blank" class="inline-flex items-center justify-center px-8 py-4 bg-white text-slate-700 font-semibold rounded-full border border-slate-200 hover:border-primary hover:text-primary transition">Learn More</a>
                 </div>
             </div>
             
-            <!-- Hero Visual: Phone Mockup -->
+            <!-- Hero Visual: Animated Phone Mockup -->
             <div class="relative flex justify-center lg:justify-end fade-in-up" style="animation-delay: 0.2s;">
                 <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-100 rounded-full blur-3xl opacity-40"></div>
                 
                 <div class="phone-mockup z-10 transform hover:rotate-1 transition-transform duration-500">
-                    <div class="phone-screen bg-slate-50 flex flex-col">
-                        <div class="flex justify-between items-center p-2 text-[10px] text-slate-500 bg-white">
-                            <span>9:41</span>
-                            <div class="flex gap-1">
+                    <div class="phone-screen bg-slate-50 relative">
+                        
+                        <!-- Status Bar -->
+                        <div class="absolute top-10 left-0 right-0 h-6 z-20 flex justify-between items-center px-6 text-[10px] text-slate-500">
+                            <span class="font-bold">9:41</span>
+                            <div class="flex gap-1 items-center">
                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.077 13.308-5.077 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05a7 7 0 00-9.9 0 1 1 0 01-1.414-1.414 9 9 0 0112.728 0 1 1 0 01-1.414 1.414zM12.12 13.88a3 3 0 00-4.242 0 1 1 0 01-1.415-1.415 5 5 0 017.072 0 1 1 0 01-1.415 1.415zM9 16a1 1 0 100 2 2 2 0 100-2z" clip-rule="evenodd"></path></svg>
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z"></path></svg>
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z"></path></svg>
                             </div>
                         </div>
 
-                        <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
-                            <div class="w-20 h-20 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4 border border-slate-100 overflow-hidden">
-                                <img src="img/logo.png" alt="Hale Logo" class="w-14 h-14 object-contain">
+                        <!-- SCENE 1: Idle -->
+                        <div id="s-idle" class="scene active bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-20 h-20 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4 border border-slate-100 overflow-hidden">
+                                    <img src="img/logo.png" alt="Hale Logo" class="w-14 h-14 object-contain">
+                                </div>
+                                <h2 class="text-xl font-bold text-slate-800 mb-2">Hello.</h2>
+                                <p class="text-slate-500 text-xs px-4">I'm Hale. Talk to me about your health...</p>
                             </div>
-                            <h2 class="text-xl font-bold text-slate-800 mb-2">Hello.</h2>
-                            <p class="text-slate-500 text-xs px-4">I'm Hale. Talk to me about your health, symptoms, or book medical checks.</p>
-                        </div>
-
-                        <div class="p-6 flex flex-col items-center">
-                            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-lg mb-2">
-                                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
-                            </div>
-                            <span class="text-[10px] font-semibold text-slate-600 uppercase tracking-wider">Tap to Talk</span>
-                        </div>
-
-                        <div class="flex justify-around border-t border-slate-100 p-2 bg-white">
-                            <div class="flex flex-col items-center text-primary">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path><path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"></path></svg>
-                                <span class="text-[9px] mt-1">Chat</span>
-                            </div>
-                            <div class="flex flex-col items-center text-slate-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                <span class="text-[9px] mt-1">Preview</span>
+                            <div class="p-6 flex flex-col items-center">
+                                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-lg mb-2">
+                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <span class="text-[10px] font-semibold text-slate-600 uppercase tracking-wider">Tap to Talk</span>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
 
-    <!-- App Preview Section -->
-    <section id="app-preview" class="py-20 lg:py-32 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in-up">
-                <span class="inline-block px-3 py-1 bg-slate-100 text-slate-600 font-semibold rounded-full text-xs mb-4 uppercase tracking-wide">MVP Concept Screens</span>
-                <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Designed for Critical Moments</h2>
-                <p class="text-lg text-slate-600 max-w-2xl mx-auto">We are designing Hale to handle everything from routine bookings to critical emergencies with equal ease.</p>
-            </div>
+                        <!-- SCENE 2: User asks for Doctor -->
+                        <div id="s-user-doc" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                                    <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <div class="voice-wave-container mb-4">
+                                    <div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 w-full">
+                                    <p class="text-slate-700 font-medium text-xs">"I need a doctor near me."</p>
+                                </div>
+                            </div>
+                            <div class="p-6 flex flex-col items-center">
+                                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg mb-2 mic-pulse relative">
+                                    <svg class="w-8 h-8 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <span class="text-[10px] text-red-600 font-semibold uppercase tracking-wider">Listening...</span>
+                            </div>
+                        </div>
 
-            <div class="flex flex-col md:flex-row justify-center items-center gap-12 md:gap-16">
-                
-                <!-- Phone 1: Emergency Alert -->
-                <div class="fade-in-up text-center">
-                    <div class="phone-mockup mx-auto mb-6 transform -rotate-3 hover:rotate-0 transition-transform">
-                        <div class="phone-screen bg-white">
-                            <div class="bg-red-600 pt-8 pb-6 px-4 text-center text-white relative">
-                                <div class="absolute top-2 left-0 right-0 text-center text-[10px] opacity-75">aistudio.google.com</div>
+                        <!-- SCENE 3: AI shows Doctor List & Recommends -->
+                        <div id="s-list-doc" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col p-4 overflow-y-auto">
+                                <div class="bg-white p-2 rounded-lg shadow-sm border border-slate-100 mb-3 text-center">
+                                    <p class="text-slate-600 text-[10px]">Found 3 General Practitioners:</p>
+                                </div>
+                                <!-- List Item 1 (Recommended) -->
+                                <div class="bg-white p-3 rounded-xl shadow-sm border-2 border-primary mb-2 relative">
+                                    <span class="absolute -top-2 -right-2 bg-primary text-white text-[8px] font-bold px-2 py-0.5 rounded-full">BEST MATCH</span>
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-xs">Dr. Sarah Patel</p>
+                                            <p class="text-[10px] text-slate-500">★ 4.9 (240) • $45</p>
+                                        </div>
+                                        <button class="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">Book</button>
+                                    </div>
+                                </div>
+                                <!-- List Item 2 -->
+                                <div class="bg-white p-3 rounded-xl shadow-xs border border-slate-100 mb-2 opacity-70">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <p class="font-semibold text-slate-700 text-xs">Dr. Khan</p>
+                                            <p class="text-[10px] text-slate-500">★ 4.5 (180) • $50</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- List Item 3 -->
+                                <div class="bg-white p-3 rounded-xl shadow-xs border border-slate-100 opacity-70">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <p class="font-semibold text-slate-700 text-xs">Dr. Lee</p>
+                                            <p class="text-[10px] text-slate-500">★ 4.2 (90) • $40</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-3 border-t border-slate-100 bg-white flex justify-center">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center mb-1 shadow-sm mic-pulse relative">
+                                        <svg class="w-5 h-5 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
+                                    </div>
+                                    <span class="text-[10px] text-red-600 font-bold uppercase">System Live</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SCENE 4: User Books Doctor -->
+                        <div id="s-book-doc" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                                    <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <div class="voice-wave-container mb-4">
+                                    <div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 w-full">
+                                    <p class="text-slate-700 font-medium text-xs">"Book tomorrow at 11:00 AM."</p>
+                                </div>
+                            </div>
+                            <div class="p-6 flex flex-col items-center">
+                                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg mb-2 mic-pulse relative">
+                                    <svg class="w-8 h-8 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <span class="text-[10px] text-red-600 font-semibold uppercase tracking-wider">Listening...</span>
+                            </div>
+                        </div>
+
+                        <!-- SCENE 5: Success Doctor -->
+                        <div id="s-success-doc" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                    <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <h2 class="text-lg font-bold text-slate-800 mb-2">Request Sent!</h2>
+                                <p class="text-slate-500 text-xs px-4 mb-4">Appointment request for Dr. Sarah Patel at 11:00 AM has been sent.</p>
+                                <div class="bg-white p-3 rounded-lg shadow-sm w-full text-left">
+                                    <p class="text-[10px] text-slate-500">You will hear from the clinic shortly to confirm.</p>
+                                </div>
+                            </div>
+                            <div class="p-4 border-t border-slate-100 bg-white flex justify-center">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center mb-1 shadow-sm mic-pulse relative">
+                                        <svg class="w-5 h-5 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
+                                    </div>
+                                    <span class="text-[10px] text-red-600 font-bold uppercase">System Live</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SCENE 6: User Symptoms -->
+                        <div id="s-user-symp" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                                    <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <div class="voice-wave-container mb-4">
+                                    <div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 w-full">
+                                    <p class="text-slate-700 font-medium text-xs">"I have chest tightness and pain in my left arm."</p>
+                                </div>
+                            </div>
+                            <div class="p-6 flex flex-col items-center">
+                                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg mb-2 mic-pulse relative">
+                                    <svg class="w-8 h-8 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <span class="text-[10px] text-red-600 font-semibold uppercase tracking-wider">Listening...</span>
+                            </div>
+                        </div>
+
+                        <!-- SCENE 7: AI Clarification -->
+                        <div id="s-ai-clar" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-20 h-20 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4 border border-slate-100 overflow-hidden">
+                                    <img src="img/logo.png" alt="Hale Logo" class="w-14 h-14 object-contain">
+                                </div>
+                                <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 w-full">
+                                    <p class="text-slate-700 font-medium text-xs">"Are you experiencing shortness of breath?"</p>
+                                </div>
+                            </div>
+                            <div class="p-6 flex flex-col items-center">
+                                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-lg mb-2 opacity-50">
+                                    <svg class="w-8 h-8 text-white animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
+                                </div>
+                                <span class="text-[10px] text-primary font-semibold uppercase tracking-wider">Waiting...</span>
+                            </div>
+                        </div>
+
+                        <!-- SCENE 8: User Confirm Emergency -->
+                        <div id="s-user-conf" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                                    <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <div class="voice-wave-container mb-4">
+                                    <div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl shadow-sm border border-red-200 w-full">
+                                    <p class="text-red-700 font-medium text-xs">"Yes, and I feel dizzy."</p>
+                                </div>
+                            </div>
+                            <div class="p-6 flex flex-col items-center">
+                                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg mb-2 mic-pulse relative">
+                                    <svg class="w-8 h-8 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <span class="text-[10px] text-red-600 font-semibold uppercase tracking-wider">Critical Input...</span>
+                            </div>
+                        </div>
+
+                        <!-- SCENE 9: Emergency Alert -->
+                        <div id="s-emergency" class="scene bg-white flex flex-col">
+                            <div class="bg-red-600 pt-16 pb-6 px-4 text-center text-white relative flex-shrink-0">
                                 <h3 class="text-lg font-bold tracking-wider">HELP REQUIRED</h3>
                                 <button class="mt-2 bg-white text-red-600 font-bold text-xs py-2 px-6 rounded-full shadow-md inline-flex items-center gap-2">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
                                     CALL 911
                                 </button>
                             </div>
-
-                            <div class="p-6 flex flex-col items-center text-center">
+                            <div class="p-6 flex flex-col items-center text-center flex-grow">
                                 <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
                                     <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                                 </div>
                                 <h4 class="font-bold text-slate-800 text-sm mb-2">Emergency Protocol Active</h4>
-                                <p class="text-slate-500 text-xs leading-relaxed">An emergency protocol has been triggered and emergency services are on the way.</p>
-                                <div class="mt-4 bg-slate-50 p-3 rounded-lg w-full">
-                                    <p class="text-primary font-semibold text-xs">Please stay calm.</p>
-                                </div>
+                                <p class="text-slate-500 text-xs leading-relaxed">Services are on the way.</p>
                             </div>
-
-                            <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-3">
+                            <div class="border-t border-slate-100 p-3 bg-white flex-shrink-0">
                                 <div class="flex flex-col items-center">
                                     <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center mb-1 shadow-sm mic-pulse relative">
                                         <svg class="w-5 h-5 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
@@ -251,56 +442,56 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Instant Emergency Response</h3>
-                    <p class="text-slate-500 max-w-xs mx-auto">Direct 911 integration with automated protocols to keep the user calm.</p>
-                </div>
 
-                <!-- Phone 2: Booking/Results -->
-                <div class="fade-in-up text-center" style="animation-delay: 0.2s;">
-                    <div class="phone-mockup mx-auto mb-6 transform rotate-3 hover:rotate-0 transition-transform">
-                        <div class="phone-screen bg-slate-50">
-                            <div class="bg-white px-4 pt-8 pb-4 border-b border-slate-100 relative">
-                                <div class="absolute top-2 left-0 right-0 text-center text-[10px] text-slate-400">aistudio.google.com</div>
-                                <div class="flex items-center gap-2">
-                                    <div class="w-6 h-6 bg-white rounded-md shadow-sm overflow-hidden border border-slate-100 flex items-center justify-center">
-                                        <img src="img/logo.png" class="w-4 h-4 object-contain">
-                                    </div>
-                                    <span class="font-bold text-slate-700 text-sm">Hale AI Assistant</span>
+                        <!-- SCENE 10: User Lab Test -->
+                        <div id="s-user-lab" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                                    <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <div class="voice-wave-container mb-4">
+                                    <div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 w-full">
+                                    <p class="text-slate-700 font-medium text-xs">"I want to book a CBC test."</p>
                                 </div>
                             </div>
-
-                            <div class="p-4">
-                                <div class="bg-white p-3 rounded-lg shadow-sm mb-4 border border-slate-100">
-                                    <p class="text-slate-600 text-xs">I found <span class="font-bold">3 General Practitioners</span> near you:</p>
+                            <div class="p-6 flex flex-col items-center">
+                                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg mb-2 mic-pulse relative">
+                                    <svg class="w-8 h-8 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
                                 </div>
+                                <span class="text-[10px] text-red-600 font-semibold uppercase tracking-wider">Listening...</span>
+                            </div>
+                        </div>
 
-                                <div class="space-y-3">
-                                    <div class="bg-white p-3 rounded-lg shadow-xs border border-slate-100 flex justify-between items-center">
+                        <!-- SCENE 11: Lab List -->
+                        <div id="s-list-lab" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col p-4 overflow-y-auto">
+                                <div class="bg-white p-2 rounded-lg shadow-sm border border-slate-100 mb-3 text-center">
+                                    <p class="text-slate-600 text-[10px]">Found 2 Nearby Labs:</p>
+                                </div>
+                                <!-- Lab 1 (Recommended) -->
+                                <div class="bg-white p-3 rounded-xl shadow-sm border-2 border-primary mb-2 relative">
+                                    <span class="absolute -top-2 -right-2 bg-primary text-white text-[8px] font-bold px-2 py-0.5 rounded-full">NEAREST</span>
+                                    <div class="flex justify-between items-center">
                                         <div>
-                                            <p class="font-semibold text-slate-700 text-xs">Dr. Sarah Patel</p>
-                                            <p class="text-[10px] text-slate-500">$50 Consult</p>
+                                            <p class="font-bold text-slate-800 text-xs">City Lab</p>
+                                            <p class="text-[10px] text-slate-500">0.5km • $20</p>
                                         </div>
-                                        <button class="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">Book Appointment</button>
+                                        <button class="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">Book</button>
                                     </div>
-                                    <div class="bg-white p-3 rounded-lg shadow-xs border border-slate-100 flex justify-between items-center">
+                                </div>
+                                <!-- Lab 2 -->
+                                <div class="bg-white p-3 rounded-xl shadow-xs border border-slate-100 opacity-70">
+                                    <div class="flex justify-between items-center">
                                         <div>
-                                            <p class="font-semibold text-slate-700 text-xs">Dr. Michael Rogers</p>
-                                            <p class="text-[10px] text-slate-500">$45 Consult</p>
+                                            <p class="font-semibold text-slate-700 text-xs">HealthCentral</p>
+                                            <p class="text-[10px] text-slate-500">1.2km • $25</p>
                                         </div>
-                                        <button class="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">Book Appointment</button>
-                                    </div>
-                                    <div class="bg-white p-3 rounded-lg shadow-xs border border-slate-100 flex justify-between items-center">
-                                        <div>
-                                            <p class="font-semibold text-slate-700 text-xs">Dr. Ayesha Malik</p>
-                                            <p class="text-[10px] text-slate-500">$55 Consult</p>
-                                        </div>
-                                        <button class="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">Book Appointment</button>
                                     </div>
                                 </div>
                             </div>
-
-                             <div class="absolute bottom-0 left-0 right-0 bg-slate-50 border-t border-slate-100 p-3">
+                            <div class="p-3 border-t border-slate-100 bg-white flex justify-center">
                                 <div class="flex flex-col items-center">
                                     <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center mb-1 shadow-sm mic-pulse relative">
                                         <svg class="w-5 h-5 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
@@ -309,46 +500,72 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- SCENE 12: User Books Lab -->
+                        <div id="s-book-lab" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                                    <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <div class="voice-wave-container mb-4">
+                                    <div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 w-full">
+                                    <p class="text-slate-700 font-medium text-xs">"Book the test."</p>
+                                </div>
+                            </div>
+                            <div class="p-6 flex flex-col items-center">
+                                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg mb-2 mic-pulse relative">
+                                    <svg class="w-8 h-8 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <span class="text-[10px] text-red-600 font-semibold uppercase tracking-wider">Listening...</span>
+                            </div>
+                        </div>
+
+                        <!-- SCENE 13: Success Lab -->
+                        <div id="s-success-lab" class="scene bg-slate-50 flex flex-col pt-16">
+                            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                    <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <h2 class="text-lg font-bold text-slate-800 mb-2">Request Sent!</h2>
+                                <p class="text-slate-500 text-xs px-4 mb-4">CBC Test booking at City Lab confirmed.</p>
+                                <div class="bg-white p-3 rounded-lg shadow-sm w-full text-left">
+                                    <p class="text-[10px] text-slate-500">You will receive a confirmation SMS shortly.</p>
+                                </div>
+                            </div>
+                            <div class="p-4 border-t border-slate-100 bg-white flex justify-center">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center mb-1 shadow-sm mic-pulse relative">
+                                        <svg class="w-5 h-5 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path></svg>
+                                    </div>
+                                    <span class="text-[10px] text-red-600 font-bold uppercase">System Live</span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Voice-First Booking</h3>
-                    <p class="text-slate-500 max-w-xs mx-auto">Simple conversation replaces complex forms and login screens.</p>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- Founder Section -->
-    <section id="founder" class="py-20 lg:py-32 bg-slate-soft">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <!-- Image Column -->
-                <div class="fade-in-up order-2 lg:order-1">
-                   <div class="relative w-full max-w-md mx-auto">
-                        <div class="absolute -inset-4 bg-teal-200/30 rounded-full blur-3xl opacity-40"></div>
-                        <img src="img/profile.png" 
-                             alt="Ayesha Altaf - Founder" 
-                             class="relative w-full rounded-3xl shadow-2xl border-4 border-white object-cover aspect-square"
-                             style="object-position: top;">
-                   </div>
-                </div>
-
-                <!-- Text Column -->
-                <div class="fade-in-up order-1 lg:order-2">
-                    <span class="inline-block px-4 py-1.5 bg-primary/10 text-primary font-semibold rounded-full text-sm mb-6">
-                        The Founder
-                    </span>
-                    <h2 class="text-3xl sm:text-3xl font-bold text-slate-900 mb-6">Driven by Experience, Built for Impact</h2>
-                    <p class="text-lg text-slate-600 mb-6 leading-relaxed">
-                        I'm <span class="font-bold text-slate-800">Ayesha Altaf</span>, a Product and Operations leader with over 5 years of experience in the HealthTech industry.
-                    </p>
-                    <p class="text-slate-600 mb-6 leading-relaxed">
-                        Throughout my career, I witnessed firsthand the inefficiencies that plague our healthcare systems—barriers that disproportionately affect the elderly and those with disabilities. I saw how technology, meant to help, often became a hurdle itself.
-                    </p>
-                    <p class="text-slate-600 mb-8 leading-relaxed">
-                        My background in Software Engineering gave me the technical foundation to bridge this gap. It taught me not just how to build software, but how to architect solutions that are scalable, robust, and most importantly, human-centric. I founded Hale to remove the friction between patients and care, using voice technology to open doors that screens have closed.
-                    </p>
-                    
-                    <div class="flex flex-col gap-3 text-sm">
+    <!-- Founder Section (Split Layout) -->
+    <section id="founder" class="bg-white min-h-[600px]">
+        <!-- Content remains the same as previous step -->
+        <div class="h-full flex flex-col lg:flex-row">
+            <div class="lg:w-1/2 h-80 lg:h-auto relative fade-in-up">
+                <img src="img/profile.png" alt="Ayesha Altaf - Founder" class="absolute inset-0 w-full h-full object-cover object-top">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-white/10"></div>
+            </div>
+            <div class="lg:w-1/2 flex items-center bg-slate-soft fade-in-up" style="animation-delay: 0.2s;">
+                <div class="px-8 py-16 lg:px-16 xl:px-24 mx-auto max-w-2xl">
+                    <span class="inline-block px-4 py-1.5 bg-primary/10 text-primary font-semibold rounded-full text-sm mb-6">The Founder</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-6">Driven by Experience, Built for Impact</h2>
+                    <p class="text-lg text-slate-600 mb-6 leading-relaxed">I'm <span class="font-bold text-slate-800">Ayesha Altaf</span>, a Product and Operations leader with over 5 years of experience in the HealthTech industry.</p>
+                    <p class="text-slate-600 mb-6 leading-relaxed">Throughout my career, I witnessed firsthand the inefficiencies that plague our healthcare systems—barriers that disproportionately affect the elderly and those with disabilities. I saw how technology, meant to help, often became a hurdle itself.</p>
+                    <p class="text-slate-600 mb-8 leading-relaxed">My background in Software Engineering gave me the technical foundation to bridge this gap. It taught me not just how to build software, but how to architect solutions that are scalable, robust, and most importantly, human-centric.</p>
+                    <div class="flex flex-col gap-3 text-sm border-t border-slate-200 pt-6">
                         <a href="mailto:ayeshaaltaf407@gmail.com" class="flex items-center gap-3 text-slate-600 hover:text-primary transition">
                             <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                             ayeshaaltaf407@gmail.com
@@ -370,35 +587,23 @@
                 <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Early Partners Wanted</h2>
                 <p class="text-lg text-slate-600 max-w-2xl mx-auto">We are actively looking for forward-thinking organizations to join our pilot program.</p>
             </div>
-
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Card 1: NGOs -->
                 <div class="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-md transition fade-in-up">
-                    <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
-                    </div>
+                    <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6"><svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg></div>
                     <h3 class="text-xl font-bold text-slate-800 mb-3">NGOs & Non-Profits</h3>
-                    <p class="text-slate-600 mb-4">Help us serve the communities that need it most. Partner with us to deploy Hale in senior centers and disability support networks.</p>
+                    <p class="text-slate-600 mb-4">Help us serve the communities that need it most.</p>
                     <a href="https://tally.so/r/Y5W896" target="_blank" class="text-primary font-semibold hover:underline">Learn More &rarr;</a>
                 </div>
-
-                <!-- Card 2: Providers -->
                 <div class="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-md transition fade-in-up" style="animation-delay: 0.1s;">
-                    <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                    </div>
+                    <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6"><svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></div>
                     <h3 class="text-xl font-bold text-slate-800 mb-3">Healthcare Providers</h3>
-                    <p class="text-slate-600 mb-4">Expand your patient base by making your services accessible via voice. Be an early adopter in accessible telehealth.</p>
+                    <p class="text-slate-600 mb-4">Expand your patient base by making your services accessible.</p>
                     <a href="https://tally.so/r/D4dQol" target="_blank" class="text-primary font-semibold hover:underline">Become a Partner &rarr;</a>
                 </div>
-
-                <!-- Card 3: Caregivers -->
                 <div class="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-md transition fade-in-up" style="animation-delay: 0.2s;">
-                    <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                    </div>
+                    <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6"><svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg></div>
                     <h3 class="text-xl font-bold text-slate-800 mb-3">Caregivers & Families</h3>
-                    <p class="text-slate-600 mb-4">Sign up to be a beta tester. Help us refine the experience for your loved ones and reduce the burden of care coordination.</p>
+                    <p class="text-slate-600 mb-4">Sign up to be a beta tester.</p>
                     <a href="https://tally.so/r/D4dQ9E" target="_blank" class="text-primary font-semibold hover:underline">Join Beta Waitlist &rarr;</a>
                 </div>
             </div>
@@ -410,32 +615,16 @@
         <div class="max-w-4xl mx-auto px-4 text-center fade-in-up">
             <div class="inline-block px-4 py-1 bg-teal-50 text-primary font-semibold rounded-full text-sm mb-6">Help Us Launch</div>
             <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-6">Support Our Mission</h2>
-            <p class="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
-                We are raising <span class="font-bold text-slate-800">$10,000</span> to complete the development of the Hale MVP. Your support helps us build the technology that makes healthcare accessible for everyone.
-            </p>
-
+            <p class="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">We are raising <span class="font-bold text-slate-800">$10,000</span> to complete the development of the Hale MVP.</p>
             <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 max-w-xl mx-auto shadow-sm">
-                <p class="text-slate-700 font-medium text-sm">
-                    🎯 Immediate Goal: We aim to raise our first <span class="font-bold text-primary">$1,000 by this weekend</span> to kickstart development.
-                </p>
+                <p class="text-slate-700 font-medium text-sm">🎯 Immediate Goal: We aim to raise our first <span class="font-bold text-primary">$1,000 by this weekend</span>.</p>
             </div>
-
-            <div class="bg-slate-200 rounded-full h-4 w-full max-w-xl mx-auto mb-4 overflow-hidden">
-                <div class="bg-primary h-full rounded-full" style="width: 0%"></div>
-            </div>
+            <div class="bg-slate-200 rounded-full h-4 w-full max-w-xl mx-auto mb-4 overflow-hidden"><div class="bg-primary h-full rounded-full" style="width: 0%"></div></div>
             <p class="text-sm text-slate-500 mb-8">$0 raised of $10,000 goal</p>
-
-            <p class="text-slate-600 font-medium mb-6">
-                Even contributions of $50 to $100 can help Hale come to life.
-            </p>
-
+            <p class="text-slate-600 font-medium mb-6">Even contributions of $50 to $100 can help Hale come to life.</p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#" class="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-bold rounded-full hover:bg-primary-dark transition shadow-lg">
-                    Support Development
-                </a>
-                <a href="https://tally.so/r/Y5W896" target="_blank" class="inline-flex items-center justify-center px-8 py-4 bg-white text-slate-700 font-semibold rounded-full border border-slate-200 hover:border-primary hover:text-primary transition">
-                    Contact Us
-                </a>
+                <a href="#" class="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-bold rounded-full hover:bg-primary-dark transition shadow-lg">Support Development</a>
+                <a href="https://tally.so/r/Y5W896" target="_blank" class="inline-flex items-center justify-center px-8 py-4 bg-white text-slate-700 font-semibold rounded-full border border-slate-200 hover:border-primary hover:text-primary transition">Contact Us</a>
             </div>
         </div>
     </section>
@@ -452,17 +641,14 @@
                 </div>
                 <p class="text-sm">Voice-first AI for accessible healthcare.</p>
             </div>
-            
             <div>
                 <h4 class="text-white font-semibold mb-4">Navigation</h4>
                 <ul class="space-y-2 text-sm">
                     <li><a href="#mission" class="hover:text-white transition">Our Mission</a></li>
-                    <li><a href="#app-preview" class="hover:text-white transition">App Preview</a></li>
                     <li><a href="#founder" class="hover:text-white transition">Founder</a></li>
                     <li><a href="#partnerships" class="hover:text-white transition">Partners</a></li>
                 </ul>
             </div>
-
             <div>
                 <h4 class="text-white font-semibold mb-4">Get Involved</h4>
                 <ul class="space-y-2 text-sm">
@@ -471,42 +657,64 @@
                     <li><a href="https://tally.so/r/D4dQ9E" target="_blank" class="hover:text-white transition">Beta Access</a></li>
                 </ul>
             </div>
-
             <div>
                 <h4 class="text-white font-semibold mb-4">Contact</h4>
                 <ul class="space-y-2 text-sm">
-                    <li>
-                        <a href="mailto:ayeshaaltaf407@gmail.com" class="hover:text-white transition flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            ayeshaaltaf407@gmail.com
-                        </a>
-                    </li>
-                    <li>
-                        <a href="tel:+923345111758" class="hover:text-white transition flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                            +92 334 5111758
-                        </a>
-                    </li>
+                    <li><a href="mailto:ayeshaaltaf407@gmail.com" class="hover:text-white transition flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> ayeshaaltaf407@gmail.com</a></li>
+                    <li><a href="tel:+923345111758" class="hover:text-white transition flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg> +92 334 5111758</a></li>
                 </ul>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-sm text-center">
-            &copy; 2023 Hale Health Technologies. All rights reserved.
-        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-sm text-center">&copy; 2023 Hale Health Technologies. All rights reserved.</div>
     </footer>
 
     <script>
+        // Scroll Animation
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
 
-        document.querySelectorAll('.fade-in-up').forEach(el => {
-            observer.observe(el);
-        });
+        // Hero Animation Sequence
+        const heroScenes = [
+            's-idle',        // 0: Idle
+            's-user-doc',    // 1: User asks for doctor
+            's-list-doc',    // 2: List of doctors
+            's-book-doc',    // 3: User books doctor
+            's-success-doc', // 4: Success Doctor
+            's-user-symp',   // 5: User symptoms
+            's-ai-clar',     // 6: AI clarification
+            's-user-conf',   // 7: User confirms emergency
+            's-emergency',   // 8: Emergency Screen
+            's-user-lab',    // 9: User asks for lab
+            's-list-lab',    // 10: List of labs
+            's-book-lab',    // 11: User books lab
+            's-success-lab'  // 12: Success Lab
+        ];
+
+        let currentHeroScene = 0;
+        
+        function runHeroAnimation() {
+            // Reset all scenes
+            heroScenes.forEach(id => document.getElementById(id).classList.remove('active'));
+            
+            // Activate current scene
+            document.getElementById(heroScenes[currentHeroScene]).classList.add('active');
+            
+            // Define timings (ms) - slightly longer for reading lists
+            const timings = [3000, 3000, 4000, 3000, 3000, 3000, 3000, 3000, 5000, 3000, 4000, 3000, 4000]; 
+            const currentDelay = timings[currentHeroScene];
+
+            setTimeout(() => {
+                currentHeroScene++;
+                if (currentHeroScene >= heroScenes.length) currentHeroScene = 0; // Loop
+                runHeroAnimation();
+            }, currentDelay);
+        }
+
+        window.addEventListener('load', runHeroAnimation);
     </script>
 </body>
 </html>
